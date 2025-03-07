@@ -8,5 +8,12 @@
   },
   "keywords": [],
   "author": "",
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "dependencies": {
+    "bare-module-lexer": "^1.2.0",
+    "bare-module-traverse": "^1.4.0",
+    "bare-pack-drive": "^1.0.2",
+    "bare-unpack": "^1.0.2",
+    "sodium-native": "^4.3.3"
+  }
 }
