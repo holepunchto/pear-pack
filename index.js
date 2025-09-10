@@ -5,8 +5,8 @@ const unpack = require('bare-unpack')
 const lex = require('bare-module-lexer')
 const traverse = require('bare-module-traverse')
 
-module.exports = async function pearPack (drive, { target, builtins } = {}) {
-  const bundle = await pack(drive, '/boot.js', { resolve, target, builtins })
+module.exports = async function pearPack (drive, { entry = '/boot.js', target, builtins } = {}) {
+  const bundle = await pack(drive, entry, { resolve, target, builtins })
   const prebuilds = new Map()
   const rebundle = await unpack(bundle, { addons: true, files: false }, async (key) => {
     const extIx = key.lastIndexOf('.')
