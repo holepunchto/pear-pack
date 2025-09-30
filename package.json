@@ -6,7 +6,7 @@
   "scripts": {
     "format": "prettier --write .",
     "lint": "prettier --check .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "brittle-bare --coverage test/index.test.js"
   },
   "keywords": [],
   "author": "",
@@ -19,7 +19,16 @@
     "sodium-native": "^4.3.3"
   },
   "devDependencies": {
+    "bare-path": "^3.0.0",
+    "brittle": "^3.19.0",
+    "localdrive": "^2.2.0",
     "prettier": "^3.6.2",
     "prettier-config-holepunch": "^1.0.0"
+  },
+  "imports": {
+    "path": {
+      "bare": "bare-path",
+      "default": "path"
+    }
   }
 }
