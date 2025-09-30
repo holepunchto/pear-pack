@@ -128,7 +128,7 @@ test('missing entry point should error', async (t) => {
   const drive = new Localdrive(path.join(dir, '/missing-entry'))
 
   try {
-    await pearPack(drive, { entry: '/nonexistent.js', target: ['darwin-x64'] })
+    await pearPack(drive, { entry: '/nonexistent.js', target: ['linux-x64'] })
     t.fail('should throw error for missing entry')
   } catch (err) {
     t.ok(err, 'should throw error for missing entry point')
@@ -143,7 +143,7 @@ test('empty directory should error', async (t) => {
   const drive = new Localdrive(path.join(dir, '/empty'))
 
   try {
-    await pearPack(drive, { target: ['darwin-x64'] })
+    await pearPack(drive, { target: ['linux-x64'] })
     t.fail('should throw error for empty directory')
   } catch (err) {
     t.ok(err, 'should throw error for empty directory')
