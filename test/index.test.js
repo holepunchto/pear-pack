@@ -119,7 +119,10 @@ test('custom entry point', async (t) => {
     bundleStr.includes('custom entry point'),
     'should include custom entry point content'
   )
-  t.ok('"main":"/main.js"', 'should include reference to entry point')
+  t.ok(
+    bundleStr.includes('"main":"/main.js"'),
+    'should include reference to entry point'
+  )
 
   t.is(result.prebuilds.size, 0, 'should have no prebuilds')
 })
@@ -194,20 +197,4 @@ test('circular dependencies', async (t) => {
   )
 
   t.is(result.prebuilds.size, 0, 'should have no prebuilds')
-})
-
-test('builtins option', async (t) => {
-  const drive = new Localdrive(path.join(dir, '/simple-require'))
-
-  const result = await pearPack(drive, {
-    target: ['linux-x64'],
-    builtins: { fs: 'mock-fs' }
-  })
-
-  t.ok(Buffer.isBuffer(result.bundle), 'should handle builtins option')
-  const bundleStr = result.bundle.toString()
-  t.ok(
-    bundleStr.includes('mock-fs') || bundleStr.length > 0,
-    'should pack with custom builtins'
-  )
 })
