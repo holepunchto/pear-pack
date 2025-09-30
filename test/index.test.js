@@ -61,7 +61,8 @@ test('native addons with require.native', async (t) => {
 
   const bundleStr = result.bundle.toString()
   t.ok(
-    bundleStr.includes('".":"/../prebuilds/linux-x64/'),
+    bundleStr.includes('".":"/../prebuilds/linux-x64/') &&
+      bundleStr.includes('.node'),
     'bundle should include reference to native addon'
   )
 
@@ -79,7 +80,8 @@ test('native bare addons with require.native', async (t) => {
 
   const bundleStr = result.bundle.toString()
   t.ok(
-    bundleStr.includes('".":"/../prebuilds/linux-x64/'),
+    bundleStr.includes('".":"/../prebuilds/linux-x64/') &&
+      bundleStr.includes('.bare'),
     'bundle should include reference to native addon'
   )
 
