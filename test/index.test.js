@@ -10,7 +10,6 @@ test('simple require test', async (t) => {
   const drive = new Localdrive(path.join(dir, '/simple-require'))
 
   const result = await pearPack(drive, {
-    entry: '/boot.js',
     target: ['linux-x64']
   })
 
@@ -33,7 +32,6 @@ test('simple import test', async (t) => {
   const drive = new Localdrive(path.join(dir, '/simple-import'))
 
   const result = await pearPack(drive, {
-    entry: '/boot.js',
     target: ['linux-x64']
   })
 
@@ -56,7 +54,6 @@ test('native addons with require.native', async (t) => {
   const drive = new Localdrive(path.join(dir, '/native-addon'))
 
   const result = await pearPack(drive, {
-    entry: '/boot.js',
     target: ['linux-x64']
   })
 
@@ -75,7 +72,6 @@ test('native bare addons with require.native', async (t) => {
   const drive = new Localdrive(path.join(dir, '/native-addon-bare'))
 
   const result = await pearPack(drive, {
-    entry: '/boot.js',
     target: ['linux-x64']
   })
 
@@ -94,7 +90,6 @@ test('assets with require.asset', async (t) => {
   const drive = new Localdrive(path.join(dir, '/asset'))
 
   const result = await pearPack(drive, {
-    entry: '/boot.js',
     target: ['linux-x64']
   })
 
@@ -148,7 +143,7 @@ test('empty directory should error', async (t) => {
   const drive = new Localdrive(path.join(dir, '/empty'))
 
   try {
-    await pearPack(drive, { entry: '/boot.js', target: ['darwin-x64'] })
+    await pearPack(drive, { target: ['darwin-x64'] })
     t.fail('should throw error for empty directory')
   } catch (err) {
     t.ok(err, 'should throw error for empty directory')
@@ -163,7 +158,6 @@ test('multiple targets', async (t) => {
   const drive = new Localdrive(path.join(dir, '/simple-require'))
 
   const result = await pearPack(drive, {
-    entry: '/boot.js',
     target: ['darwin-x64', 'linux-x64', 'win32-x64']
   })
 
@@ -176,7 +170,6 @@ test('multiple targets', async (t) => {
 test('JSON modules', async (t) => {
   const drive = new Localdrive(path.join(dir, '/json-module'))
   const result = await pearPack(drive, {
-    entry: '/boot.js',
     target: ['linux-x64']
   })
 
@@ -190,7 +183,6 @@ test('circular dependencies', async (t) => {
   const drive = new Localdrive(path.join(dir, '/circular-deps'))
 
   const result = await pearPack(drive, {
-    entry: '/boot.js',
     target: ['linux-x64']
   })
 
@@ -208,7 +200,6 @@ test('builtins option', async (t) => {
   const drive = new Localdrive(path.join(dir, '/simple-require'))
 
   const result = await pearPack(drive, {
-    entry: '/boot.js',
     target: ['linux-x64'],
     builtins: { fs: 'mock-fs' }
   })
