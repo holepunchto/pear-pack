@@ -182,7 +182,7 @@ test('circular dependencies', async (t) => {
   t.ok(Buffer.isBuffer(result.bundle), 'should handle circular dependencies')
   const bundleStr = result.bundle.toString()
   t.ok(
-    bundleStr.includes('moduleA') && bundleStr.includes('moduleB'),
+    bundleStr.includes('"/moduleA.js"') && bundleStr.includes('"/moduleB.js"'),
     'should include both circular modules'
   )
 
