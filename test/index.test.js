@@ -71,6 +71,25 @@ test('native addons with require.native', async (t) => {
   t.is(result.prebuilds.size, 1, 'should capture one prebuild')
 })
 
+test('native bare addons with require.native', async (t) => {
+  const drive = new Localdrive(path.join(dir, '/native-addon-bare'))
+
+  const result = await pearPack(drive, {
+    entry: '/boot.js',
+    target: ['linux-x64']
+  })
+
+  t.ok(Buffer.isBuffer(result.bundle), 'should return bundle buffer')
+
+  const bundleStr = result.bundle.toString()
+  t.ok(
+    bundleStr.includes('".":"/../prebuilds/linux-x64/'),
+    'bundle should include reference to native addon'
+  )
+
+  t.is(result.prebuilds.size, 1, 'should capture one prebuild')
+})
+
 test('assets with require.asset', async (t) => {
   const drive = new Localdrive(path.join(dir, '/asset'))
 
