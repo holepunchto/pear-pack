@@ -130,31 +130,21 @@ test('custom entry point', async (t) => {
 test('missing entry point should error', async (t) => {
   const drive = new Localdrive(path.join(dir, '/missing-entry'))
 
-  try {
-    await pearPack(drive, { entry: '/nonexistent.js', target: ['linux-x64'] })
-    t.fail('should throw error for missing entry')
-  } catch (err) {
-    t.ok(err, 'should throw error for missing entry point')
-    t.ok(
-      err.message.includes('nonexistent.js'),
-      'error should mention missing file'
-    )
-  }
+  await t.exception(
+    pearPack(drive, { entry: '/nonexistent.js', target: ['linux-x64'] }),
+    /nonexistent\.js/,
+    'should throw error for missing entry file'
+  )
 })
 
 test('empty directory should error', async (t) => {
   const drive = new Localdrive(path.join(dir, '/empty'))
 
-  try {
-    await pearPack(drive, { target: ['linux-x64'] })
-    t.fail('should throw error for empty directory')
-  } catch (err) {
-    t.ok(err, 'should throw error for empty directory')
-    t.ok(
-      err.message.includes('boot.js'),
-      'error should mention missing entry file'
-    )
-  }
+  await t.exception(
+    pearPack(drive, { target: ['linux-x64'] }),
+    /boot\.js/,
+    'should throw error for missing entry file in empty directory'
+  )
 })
 
 test('multiple targets', async (t) => {
