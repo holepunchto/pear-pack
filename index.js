@@ -8,7 +8,7 @@ const traverse = require('bare-module-traverse')
 module.exports = async function pearPack(drive, opts = {}) {
   const {
     entry = '/boot.js',
-    target,
+    hosts,
     builtins,
     imports,
     prebuildPrefix = '',
@@ -17,7 +17,7 @@ module.exports = async function pearPack(drive, opts = {}) {
   } = opts
   const bundle = await pack(drive, entry, {
     resolve,
-    target,
+    hosts,
     builtins,
     imports
   })
@@ -48,7 +48,7 @@ module.exports = async function pearPack(drive, opts = {}) {
   }
   function resolve(entry, parentURL, opts = {}) {
     let extensions
-    let conditions = opts.target.map((host) => [...conds, ...host.split('-')])
+    let conditions = opts.hosts.map((host) => [...conds, ...host.split('-')])
 
     if (entry.type & lex.constants.ADDON) {
       extensions = [...exts]
@@ -57,7 +57,7 @@ module.exports = async function pearPack(drive, opts = {}) {
       return traverse.resolve.addon(entry.specifier || '.', parentURL, {
         extensions,
         conditions,
-        hosts: opts.target,
+        hosts: opts.hosts,
         linked: false,
         ...opts
       })

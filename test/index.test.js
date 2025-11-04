@@ -10,7 +10,7 @@ test('simple require test', async (t) => {
   const drive = new Localdrive(path.join(dir, '/simple-require'))
 
   const result = await pearPack(drive, {
-    target: ['linux-x64']
+    hosts: ['linux-x64']
   })
 
   t.ok(Buffer.isBuffer(result.bundle), 'should return bundle buffer')
@@ -32,7 +32,7 @@ test('simple import test', async (t) => {
   const drive = new Localdrive(path.join(dir, '/simple-import'))
 
   const result = await pearPack(drive, {
-    target: ['linux-x64']
+    hosts: ['linux-x64']
   })
 
   t.ok(Buffer.isBuffer(result.bundle), 'should return bundle buffer')
@@ -54,14 +54,14 @@ test('native addons with require.native', async (t) => {
   const drive = new Localdrive(path.join(dir, '/native-addon'))
 
   const result = await pearPack(drive, {
-    target: ['linux-x64']
+    hosts: ['linux-x64']
   })
 
   t.ok(Buffer.isBuffer(result.bundle), 'should return bundle buffer')
 
   const bundleStr = result.bundle.toString()
   t.ok(
-    bundleStr.includes('".":"/../prebuilds/linux-x64/') &&
+    bundleStr.includes('".":"/prebuilds/linux-x64/') &&
       bundleStr.includes('.node'),
     'bundle should include reference to native addon'
   )
@@ -73,14 +73,14 @@ test('native bare addons with require.native', async (t) => {
   const drive = new Localdrive(path.join(dir, '/native-addon-bare'))
 
   const result = await pearPack(drive, {
-    target: ['linux-x64']
+    hosts: ['linux-x64']
   })
 
   t.ok(Buffer.isBuffer(result.bundle), 'should return bundle buffer')
 
   const bundleStr = result.bundle.toString()
   t.ok(
-    bundleStr.includes('".":"/../prebuilds/linux-x64/') &&
+    bundleStr.includes('".":"/prebuilds/linux-x64/') &&
       bundleStr.includes('.bare'),
     'bundle should include reference to native addon'
   )
@@ -92,7 +92,7 @@ test('assets with require.asset', async (t) => {
   const drive = new Localdrive(path.join(dir, '/asset'))
 
   const result = await pearPack(drive, {
-    target: ['linux-x64']
+    hosts: ['linux-x64']
   })
 
   t.ok(Buffer.isBuffer(result.bundle), 'should return bundle buffer')
@@ -111,7 +111,7 @@ test('custom entry point', async (t) => {
 
   const result = await pearPack(drive, {
     entry: '/main.js',
-    target: ['linux-x64']
+    hosts: ['linux-x64']
   })
 
   t.ok(Buffer.isBuffer(result.bundle), 'should pack with custom entry')
@@ -133,7 +133,7 @@ test('missing entry point should error', async (t) => {
   const drive = new Localdrive(path.join(dir, '/missing-entry'))
 
   await t.exception(
-    pearPack(drive, { entry: '/nonexistent.js', target: ['linux-x64'] }),
+    pearPack(drive, { entry: '/nonexistent.js', hosts: ['linux-x64'] }),
     /nonexistent\.js/,
     'should throw error for missing entry file'
   )
@@ -143,21 +143,21 @@ test('empty directory should error', async (t) => {
   const drive = new Localdrive(path.join(dir, '/empty'))
 
   await t.exception(
-    pearPack(drive, { target: ['linux-x64'] }),
+    pearPack(drive, { hosts: ['linux-x64'] }),
     /boot\.js/,
     'should throw error for missing entry file in empty directory'
   )
 })
 
-test('multiple targets', async (t) => {
+test('multiple hostss', async (t) => {
   const drive = new Localdrive(path.join(dir, '/simple-require'))
 
   const result = await pearPack(drive, {
-    target: ['darwin-x64', 'linux-x64', 'win32-x64']
+    hosts: ['darwin-x64', 'linux-x64', 'win32-x64']
   })
 
-  t.ok(Buffer.isBuffer(result.bundle), 'should handle multiple targets')
-  t.ok(result.bundle.length > 0, 'multi-target bundle should have content')
+  t.ok(Buffer.isBuffer(result.bundle), 'should handle multiple hostss')
+  t.ok(result.bundle.length > 0, 'multi-hosts bundle should have content')
 
   t.is(result.prebuilds.size, 0, 'should have no prebuilds')
 })
@@ -165,7 +165,7 @@ test('multiple targets', async (t) => {
 test('JSON modules', async (t) => {
   const drive = new Localdrive(path.join(dir, '/json-module'))
   const result = await pearPack(drive, {
-    target: ['linux-x64']
+    hosts: ['linux-x64']
   })
 
   const bundleStr = result.bundle.toString()
@@ -178,7 +178,7 @@ test('circular dependencies', async (t) => {
   const drive = new Localdrive(path.join(dir, '/circular-deps'))
 
   const result = await pearPack(drive, {
-    target: ['linux-x64']
+    hosts: ['linux-x64']
   })
 
   t.ok(Buffer.isBuffer(result.bundle), 'should handle circular dependencies')
