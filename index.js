@@ -5,11 +5,22 @@ const unpack = require('bare-unpack')
 const lex = require('bare-module-lexer')
 const traverse = require('bare-module-traverse')
 
-module.exports = async function pearPack(
-  drive,
-  { entry = '/boot.js', target, builtins } = {}
-) {
-  const bundle = await pack(drive, entry, { resolve, target, builtins })
+module.exports = async function pearPack(drive, opts = {}) {
+  const {
+    entry = '/boot.js',
+    target,
+    builtins,
+    imports,
+    prebuildPrefix = '',
+    conditions: conds = ['node', 'bare'],
+    extensions: exts = ['.node', '.bare']
+  } = opts
+  const bundle = await pack(drive, entry, {
+    resolve,
+    target,
+    builtins,
+    imports
+  })
   const prebuilds = new Map()
   const rebundle = await unpack(
     bundle,
@@ -28,51 +39,45 @@ module.exports = async function pearPack(
         hash.toString('hex') +
         extname
       prebuilds.set(prebuild, addon)
-      return '/..' + prebuild
+      return prebuildPrefix + prebuild
     }
   )
   return {
     bundle: rebundle.toBuffer(),
     prebuilds: prebuilds
   }
-}
+  function resolve(entry, parentURL, opts = {}) {
+    let extensions
+    let conditions = opts.target.map((host) => [...conds, ...host.split('-')])
 
-function resolve(entry, parentURL, opts = {}) {
-  let extensions
-  let conditions = opts.target.map((host) => [
-    'node',
-    'bare',
-    ...host.split('-')
-  ])
+    if (entry.type & lex.constants.ADDON) {
+      extensions = [...exts]
+      conditions = conditions.map((conditions) => ['addon', ...conditions])
 
-  if (entry.type & lex.constants.ADDON) {
-    extensions = ['.node', '.bare']
-    conditions = conditions.map((conditions) => ['addon', ...conditions])
+      return traverse.resolve.addon(entry.specifier || '.', parentURL, {
+        extensions,
+        conditions,
+        hosts: opts.target,
+        linked: false,
+        ...opts
+      })
+    }
 
-    return traverse.resolve.addon(entry.specifier || '.', parentURL, {
+    if (entry.type & lex.constants.ASSET) {
+      conditions = conditions.map((conditions) => ['asset', ...conditions])
+    } else {
+      extensions = ['.js', '.cjs', '.mjs', '.json', ...exts]
+
+      if (entry.type & lex.constants.REQUIRE) {
+        conditions = conditions.map((conditions) => ['require', ...conditions])
+      } else if (entry.type & lex.constants.IMPORT) {
+        conditions = conditions.map((conditions) => ['import', ...conditions])
+      }
+    }
+    return traverse.resolve.module(entry.specifier, parentURL, {
       extensions,
       conditions,
-      hosts: opts.target,
-      linked: false,
       ...opts
     })
   }
-
-  if (entry.type & lex.constants.ASSET) {
-    conditions = conditions.map((conditions) => ['asset', ...conditions])
-  } else {
-    extensions = ['.js', '.cjs', '.mjs', '.json', '.node', '.bare']
-
-    if (entry.type & lex.constants.REQUIRE) {
-      conditions = conditions.map((conditions) => ['require', ...conditions])
-    } else if (entry.type & lex.constants.IMPORT) {
-      conditions = conditions.map((conditions) => ['import', ...conditions])
-    }
-  }
-
-  return traverse.resolve.module(entry.specifier, parentURL, {
-    extensions,
-    conditions,
-    ...opts
-  })
 }
