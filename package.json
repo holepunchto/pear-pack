@@ -10,8 +10,9 @@
     "test:node": "brittle-node --coverage test/index.test.js",
     "test:bare": "brittle-bare --coverage test/index.test.js"
   },
+  "files": [],
   "keywords": [],
-  "author": "",
+  "author": "Holepunch Inc",
   "license": "Apache-2.0",
   "dependencies": {
     "bare-module-lexer": "^1.2.0",
