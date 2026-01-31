@@ -11,6 +11,7 @@ module.exports = async function pearPack(drive, opts = {}) {
     hosts,
     builtins,
     imports,
+    mount = '',
     assetsPrefix = '',
     prebuildPrefix = '',
     conditions: conds = ['node', 'bare'],
@@ -24,7 +25,7 @@ module.exports = async function pearPack(drive, opts = {}) {
   })
   const prebuilds = new Map()
   const assets = new Map()
-  const rebundle = await unpack(
+  let rebundle = await unpack(
     bundle,
     { addons: true, assets: true, files: false },
     async (key) => {
@@ -51,6 +52,7 @@ module.exports = async function pearPack(drive, opts = {}) {
       return prebuildPrefix + prebuild
     }
   )
+  if (mount) rebundle = rebundle.mount(mount)
   return {
     bundle: rebundle.toBuffer(),
     prebuilds: prebuilds,

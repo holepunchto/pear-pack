@@ -12,6 +12,9 @@ Creates a bundle buffer and Map of prebuild buffers.
 
 - `target` - target host architecture, may be array of architectures
 - `builtins` - array of builtins
+- `mount` - bundle mount point
+- `prebuildsPrefix` - prefix for prebuild paths
+- `assetsPrefix` - prefix for asset paths
 - `entry` - default `/boot.js`, bundle entrypoint
 - `conditionals` - default: `['node', 'bare']` additional prefixed conditionals
 - `extensions` - default: `['.node', '.bare']` supported addon extensions

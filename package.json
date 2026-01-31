@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "format": "prettier --write .",
+    "format": "prettier --write . && lunte --fix",
     "lint": "prettier --check . && lunte",
     "test": "npm run test:node && npm run test:bare",
     "test:node": "brittle-node --coverage test/index.test.js",
@@ -25,7 +25,7 @@
     "bare-path": "^3.0.0",
     "brittle": "^3.19.0",
     "localdrive": "^2.2.0",
-    "lunte": "^1.3.0",
+    "lunte": "^1.5.0",
     "prettier": "^3.6.2",
     "prettier-config-holepunch": "^1.0.0"
   },
