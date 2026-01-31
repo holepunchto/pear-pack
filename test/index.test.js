@@ -94,14 +94,27 @@ test('assets with require.asset', async (t) => {
   const result = await pearPack(drive, {
     hosts: ['linux-x64']
   })
-
+  t.ok(
+    result.assets.get('/data.txt'),
+    'assets /data.txt contains data.txt buffer'
+  )
   t.ok(Buffer.isBuffer(result.bundle), 'should return bundle buffer')
 
-  const bundleStr = result.bundle.toString()
+  t.is(result.prebuilds.size, 0, 'should have no prebuilds')
+})
+
+test('assets with require.asset + assetsPrefix', async (t) => {
+  const drive = new Localdrive(path.join(dir, '/asset'))
+
+  const result = await pearPack(drive, {
+    hosts: ['linux-x64'],
+    assetsPrefix: '/foo/bar'
+  })
   t.ok(
-    bundleStr.includes('"assets":["/data.txt"]'),
-    'bundle should include reference to asset'
+    result.assets.get('/foo/bar/data.txt'),
+    'assets /data.txt contains data.txt buffer'
   )
+  t.ok(Buffer.isBuffer(result.bundle), 'should return bundle buffer')
 
   t.is(result.prebuilds.size, 0, 'should have no prebuilds')
 })

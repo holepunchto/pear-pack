@@ -11,6 +11,7 @@ module.exports = async function pearPack(drive, opts = {}) {
     hosts,
     builtins,
     imports,
+    assetsPrefix = '',
     prebuildPrefix = '',
     conditions: conds = ['node', 'bare'],
     extensions: exts = ['.node', '.bare']
@@ -22,14 +23,22 @@ module.exports = async function pearPack(drive, opts = {}) {
     imports
   })
   const prebuilds = new Map()
+  const assets = new Map()
   const rebundle = await unpack(
     bundle,
-    { addons: true, files: false },
+    { addons: true, assets: true, files: false },
     async (key) => {
       const extIx = key.lastIndexOf('.')
       if (extIx === -1) return key
       const extname = key.slice(extIx)
-      if (extname !== '.node' && extname !== '.bare') return key
+      if (extname !== '.node' && extname !== '.bare') {
+        const assetList = new Set(bundle.assets)
+        if (assetList.has(key)) {
+          const asset = await drive.get(key)
+          assets.set(assetsPrefix + key, asset)
+        }
+        return key
+      }
       const hash = Buffer.allocUnsafe(32)
       const addon = await drive.get(key)
       sodium.crypto_generichash(hash, addon)
@@ -44,7 +53,8 @@ module.exports = async function pearPack(drive, opts = {}) {
   )
   return {
     bundle: rebundle.toBuffer(),
-    prebuilds: prebuilds
+    prebuilds: prebuilds,
+    assets: assets
   }
   function resolve(entry, parentURL, opts = {}) {
     let extensions
